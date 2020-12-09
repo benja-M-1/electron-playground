@@ -25,15 +25,19 @@ function createWindow () {
     backgroundColor: '#131415',
     frame: false,
     show: false,
-    fullscreenable: false,
+    fullscreenable: false ,
     acceptFirstMouse: true,
   })
 
 
   win.loadFile('index.html')
+//   win.setAlwaysOnTop(true);
+//   win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
   win.webContents.once('did-finish-load', () => {
     win.show();
+    //win.setAlwaysOnTop(false);
+    //win.setVisibleOnAllWorkspaces(false);  
   });
 
   win.webContents.openDevTools();
@@ -56,9 +60,18 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.handle('perform-action', (event) => {
-    console.log('fix window');
-    win.setAlwaysOnTop(true);
-    win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });  
-})
-
+ipcMain.handle('fix', (event, fixed) => {
+    console.log('fix window', fixed);
+    
+    if (fixed) {
+        win.setFullScreenable(true);
+        win.setContentProtection(true);
+        win.setAlwaysOnTop(true);
+        win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });  
+    } else {
+        win.setFullScreenable(false);
+        win.setContentProtection(false);
+        win.setAlwaysOnTop(false);
+        win.setVisibleOnAllWorkspaces(false);  
+    }
+});

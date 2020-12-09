@@ -16,11 +16,12 @@
     </p>
     <script>
         const { ipcRenderer } = require('electron')
+        let fixed = false;
 
         const button = document.getElementById('ipc');
         button.addEventListener('click', () => {
-            console.log('clicked')
-            ipcRenderer.invoke('perform-action', 'coucou')
+            fixed = !fixed;
+            ipcRenderer.invoke('fix', fixed);
         });
     </script>
 </body>
