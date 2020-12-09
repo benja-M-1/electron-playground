@@ -11,6 +11,17 @@
         We are using node <script>document.write(process.versions.node)</script>,
         Chrome <script>document.write(process.versions.chrome)</script>,
         and Electron <script>document.write(process.versions.electron)</script>.
+
+        <button id="ipc">click</button>
     </p>
+    <script>
+        const { ipcRenderer } = require('electron')
+
+        const button = document.getElementById('ipc');
+        button.addEventListener('click', () => {
+            console.log('clicked')
+            ipcRenderer.invoke('perform-action', 'coucou')
+        });
+    </script>
 </body>
 </html>

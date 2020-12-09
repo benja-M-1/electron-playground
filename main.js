@@ -1,9 +1,15 @@
-const { app, screen, BrowserWindow } = require('electron')
+const { app, screen, BrowserWindow, systemPreferences, ipcMain, remote } = require('electron')
+
+let win = null;
 
 function createWindow () {
+  const microphoneStatus = systemPreferences.getMediaAccessStatus('microphone');
+  const cameraStatus = systemPreferences.getMediaAccessStatus('camera');
+  const isTrustedAccessibilityClient = systemPreferences.isTrustedAccessibilityClient(false);
+
   const { x, y } = screen.getCursorScreenPoint();
   const screenBounds = screen.getDisplayNearestPoint({ x, y }).bounds;
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 374,
     minWidth: 374,
     maxWidth: 375,
@@ -25,8 +31,6 @@ function createWindow () {
 
 
   win.loadFile('index.html')
-  win.setAlwaysOnTop(true);
-  win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
   win.webContents.once('did-finish-load', () => {
     win.show();
@@ -50,5 +54,11 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
+})
+
+ipcMain.handle('perform-action', (event) => {
+    console.log('fix window');
+    win.setAlwaysOnTop(true);
+    win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });  
 })
 
